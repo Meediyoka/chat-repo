@@ -6,10 +6,10 @@ var docClient = new AWS.DynamoDB.DocumentClient({
 });
 
 exports.handler = function(event, context, callback) {
-    const paper = event.queryResult.parameters['Paper'];
-    const pre_req = event.queryResult.parameters['pre-req'];
-    const co_req = event.queryResult.parameters['co-req'];
-    const key_date = event.queryResult.parameters['Keydates'];
+    const paper = event.queryResult.parameters['Paper'];                     //The following variables store incoming parameter values from a 
+    const pre_req = event.queryResult.parameters['pre-req'];				// JSON file sent by DialogFlow. Depending on the users question or query
+    const co_req = event.queryResult.parameters['co-req'];				   // The parameters will be updated based on the context of request.
+    const key_date = event.queryResult.parameters['Keydates'];			   // E.G if a user asks about semester dates, the parameter keydates will be sent through.
     const manukau = event.queryResult.parameters['manukau'];
 
 
@@ -198,7 +198,11 @@ exports.handler = function(event, context, callback) {
            }
            
        // EASTER BREAK
-           
+           else if(parameter2 == "easter"){
+               table_scope = "EasterBreak";
+               fulfillmentScopeText = easterBreak;
+               fulfillmentScopeDate = "The dates for ";
+           }
                   
        // MID SEM BREAK
            else if(parameter2 == "midsembreak" && parameter1 == "semester1"){
@@ -253,6 +257,64 @@ exports.handler = function(event, context, callback) {
         })
                   
        // MANUKAU
+	   
+	   }else if(manukau != null){
+        console.log(paper);
+         var params = {
+            TableName: 'paperInformationChatBot',
+            ProjectionExpression: 'Paper_Name, Manukau', 
+            FilterExpression: 'Paper_Code = :paper_code',
+            ExpressionAttributeValues: {
+                ":paper_code": paper
+            }
+        };
+
+
+        docClient.scan(params, function(err, data) {
+            if (err) {
+                console.log(err, null); // an error occurred // 
+            } else {
+                console.log(data);
+
+                var paper_name = data.Items[0].Paper_Name;
+                var is_manukau = data.Items[0].Manukau;
+          
+          if(is_manukau == "Yes, Semester 2 has availability"){
+             callback(null, {
+                        fulfillmentText: is_manukau + " for " + paper_name
+                    });
+                
+
+            }
+           else if(is_manukau == "Yes, Semester 1 has availability"){
+             callback(null, {
+                        fulfillmentText: is_manukau + " for " + paper_name
+                    });
+                
+
+            }
+            else if(is_manukau == "No"){
+             callback(null, {
+                        fulfillmentText: "There are unfortunately no streams for " + paper_name + " at Manukau Campus this year"
+                    });
+                
+
+            }
+            else if(is_manukau == "Yes, Both Semesters are available"){
+             callback(null, {
+                        fulfillmentText: is_manukau + " for " + paper_name
+                    });
+                
+
+            }
+            else{
+                callback(null, {
+                        fulfillmentText: "Sorry, I failed to understand your question regarding Manukau"
+                    });
+            }
+        }
+        })
+        
         
      
         
