@@ -112,6 +112,41 @@ exports.handler = function(event, context, callback) {
             }
 
         });
+		
+		     //PRESCRIPTOR
+        
+    } else if (prescriptor != null) {
+        
+            params = {
+            TableName: 'paperInformationChatBot',
+            ProjectionExpression: 'Paper_Name, Prescriptor', // remove this string if you want to get not only 'name'
+            FilterExpression: 'Paper_Code = :paper_code',
+            ExpressionAttributeValues: {
+                ":paper_code": paper
+            }
+        };
+
+
+        docClient.scan(params, function(err, data) {
+            if (err) {
+                console.log(err, null); // an error occurred // 
+            } else {
+                console.log(data);
+
+                var paper_name = data.Items[0].Paper_Name;
+                var paper_prescriptor = data.Items[0].Prescriptor;
+
+
+                    callback(null, {
+                        fulfillmentText: "Paper prescriptor for " + paper_name + ": " + paper_prescriptor
+                    });
+                
+               
+
+            }
+
+        });
+ 
 
 
         // KEY-DATE HANDLER
