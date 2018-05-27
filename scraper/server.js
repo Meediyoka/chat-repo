@@ -39,7 +39,7 @@ app.get('/scrape', function(req, res) {
             };
             items = [];
 
-            $('a[class=Navigation]').each(function() {
+            $('a[class=Navigation]').each(function() {  // The following is a div element ID in which our payload is stored. Arion holds paper_name values here!
 
                 // Let's store the data we filter into a variable so we can easily see what's going on.
 
@@ -47,9 +47,7 @@ app.get('/scrape', function(req, res) {
 
                 if (data.text() != null) {
 
-
-
-                    // In examining the DOM we notice that the title rests within the first child element of the header tag. 
+					// In examining the DOM we notice that the title rests within the first child element of the header tag. 
                     // Utilizing jQuery we can easily navigate and get the text by writing the following code:
 
                     paper_code = data.text();
