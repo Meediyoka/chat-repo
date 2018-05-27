@@ -11,6 +11,10 @@ exports.handler = function(event, context, callback) {
     const co_req = event.queryResult.parameters['co-req']; // The parameters will be updated based on the context of request.
     const key_date = event.queryResult.parameters['Keydates']; // E.G if a user asks about semester dates, the parameter keydates will be sent through.
     const manukau = event.queryResult.parameters['manukau'];
+	const prescriptor = event.queryResult.parameters['prescriptor'];
+    const core = event.queryResult.parameters['core'];
+    const job = event.queryResult.parameters['job'];
+    const year = event.queryResult.parameters['year'];
 
 
     function fallback(agent) {                          //Fall back agent, If a query cannot be matched fallback agent is called.
