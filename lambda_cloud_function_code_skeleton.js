@@ -198,7 +198,11 @@ exports.handler = function(event, context, callback) {
            }
            
        // EASTER BREAK
-           
+           else if(parameter2 == "easter"){
+               table_scope = "EasterBreak";
+               fulfillmentScopeText = easterBreak;
+               fulfillmentScopeDate = "The dates for ";
+           }
                   
        // MID SEM BREAK
            else if(parameter2 == "midsembreak" && parameter1 == "semester1"){
