@@ -147,6 +147,45 @@ exports.handler = function(event, context, callback) {
 
         });
  
+      
+        // CORE PAPER
+        
+    } else if (core != null) {
+        
+            params = {
+            TableName: 'paperInformationChatBot',
+            ProjectionExpression: 'Paper_Name, Core', // remove this string if you want to get not only 'name'
+            FilterExpression: 'Paper_Code = :paper_code',
+            ExpressionAttributeValues: {
+                ":paper_code": paper
+            }
+        };
+
+
+        docClient.scan(params, function(err, data) {
+            if (err) {
+                console.log(err, null); // an error occurred // 
+            } else {
+                console.log(data);
+
+                var paper_name = data.Items[0].Paper_Name;
+                var paper_core = data.Items[0].Core;
+
+                    if(paper_core == "Yes"){
+                    callback(null, {
+                        fulfillmentText: paper_core + ", " + paper_name + " is a core paper for Software Development" 
+                    });
+                }else if(paper_core == "No"){
+                    callback(null, {
+                        fulfillmentText: paper_core + ", " + paper_name + " is not a core paper for Software Development"
+                    });
+                }
+
+            }
+
+        });
+        
+        
 
 
         // KEY-DATE HANDLER
