@@ -6,10 +6,10 @@ var docClient = new AWS.DynamoDB.DocumentClient({
 });
 
 exports.handler = function(event, context, callback) {
-    const paper = event.queryResult.parameters['Paper'];
-    const pre_req = event.queryResult.parameters['pre-req'];
-    const co_req = event.queryResult.parameters['co-req'];
-    const key_date = event.queryResult.parameters['Keydates'];
+    const paper = event.queryResult.parameters['Paper'];                     //The following variables store incoming parameter values from a 
+    const pre_req = event.queryResult.parameters['pre-req'];				// JSON file sent by DialogFlow. Depending on the users question or query
+    const co_req = event.queryResult.parameters['co-req'];				   // The parameters will be updated based on the context of request.
+    const key_date = event.queryResult.parameters['Keydates'];			   // E.G if a user asks about semester dates, the parameter keydates will be sent through.
     const manukau = event.queryResult.parameters['manukau'];
 
 
