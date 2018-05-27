@@ -73,6 +73,50 @@ exports.handler = function(event, context, callback) {
     
         
 	   //CO-REQ HANDLER
+	   
+	   
+    } else if (co_req != null) {
+        
+            params = {
+            TableName: 'paperInformationChatBot',
+            ProjectionExpression: 'Corequisites, Paper_Name, PrerequisitesAdditional', // remove this string if you want to get not only 'name'
+            FilterExpression: 'Paper_Code = :paper_code',
+            ExpressionAttributeValues: {
+                ":paper_code": paper
+            }
+        };
+
+
+        docClient.scan(params, function(err, data) {
+            if (err) {
+                console.log(err, null); // an error occurred // 
+            } else {
+                console.log(data);
+
+                var paper_name = data.Items[0].Paper_Name;
+                var paper_corequisite = data.Items[0].Corequisites;
+                var paper_prerequisite = data.Items[0].PrerequisitesAdditional;
+
+                console.log(paper_corequisite);
+                if (paper_corequisite == "None") {
+                    callback(null, {
+                        fulfillmentText: "" + paper_name + " has no corequisites."
+                    });
+                }
+                else if(paper_corequisite != "None" && paper_prerequisite != "None"){
+                    callback(null, {
+                        fulfillmentText: "The corequisite for " + paper_name + " is " + paper_corequisite + " and the prerequisites are " + paper_prerequisite
+                    });
+                }
+                else{
+                    callback(null, {
+                        fulfillmentText: "The corequisite for " + paper_name + " is " +paper_corequisite
+                    });
+                }
+
+            }
+
+        });
 
 	   
 	   // KEY-DATE HANDLER
@@ -134,11 +178,6 @@ exports.handler = function(event, context, callback) {
                fulfillmentScopeText = fulfillmentBetween;
                fulfillmentScopeDate = semester2;
            }
-       
-	   //SEMESTER 1 DATES
-           
-          
-       //SEMESTER 2 DATES
            
           
        // SUMMER SCHOOL DATES
