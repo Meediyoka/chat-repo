@@ -142,7 +142,21 @@ exports.handler = function(event, context, callback) {
            
           
        // SUMMER SCHOOL DATES
-     
+			else if(parameter1 == "end" && parameter2 == "summerschool"){
+               table_scope = "LastDaySummer";
+               fulfillmentScopeText = fulfillmentLast;
+               fulfillmentScopeDate = summerSchool;
+           }
+            else if(parameter1 == "start" && parameter2 == "summerschool"){
+               table_scope = "FirstDaySummer";
+               fulfillmentScopeText = fulfillmentStart;
+               fulfillmentScopeDate = summerSchool;
+           }
+            else if(parameter1 == "summerschool" && parameter2 == "when"){
+               table_scope = "SummerSchoolDates";
+               fulfillmentScopeText = fulfillmentBetween;
+               fulfillmentScopeDate = summerSchool;
+           }
            
        // EASTER BREAK
            
