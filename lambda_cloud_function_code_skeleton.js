@@ -20,6 +20,56 @@ exports.handler = function(event, context, callback) {
 
 
        // PRE-REQ HANDLER
+	   
+	   if (pre_req != null) {
+
+        var params = {
+            TableName: 'paperInformationChatBot',
+            ProjectionExpression: 'Prerequisites, Paper_Name, PrerequisitesAdditional', 
+            FilterExpression: 'Paper_Code = :paper_code',
+            ExpressionAttributeValues: {
+                ":paper_code": paper
+            }
+        };
+
+
+        docClient.scan(params, function(err, data) {
+            if (err) {
+                console.log(err, null); // an error occurred // 
+            } else {
+                console.log(data);
+
+                var paper_name = data.Items[0].Paper_Name;
+                var paper_prerequisite = data.Items[0].Prerequisites;
+                var add_prerequisite = data.Items[0].PrerequisitesAdditional;
+
+                console.log(paper_prerequisite);
+                if (paper_prerequisite == "None" && add_prerequisite == "None") {
+                    callback(null, {
+                        fulfillmentText: "" + paper_name + " has no prerequisites."
+                    });
+                }
+                else if (paper_prerequisite != "None" && add_prerequisite == "None") {
+                    callback(null, {
+                        fulfillmentText: "The prerequisites for " + paper_name + " is " + paper_prerequisite
+                    });
+                }
+                else if (paper_prerequisite == "None" && add_prerequisite != "None") {
+                    callback(null, {
+                        fulfillmentText: "The prerequisites for " + paper_name + " are any one of " + add_prerequisite 
+                    });
+                }
+                else if (add_prerequisite != "None") {
+                    callback(null, {
+                        fulfillmentText: "The prerequisite for " + paper_name + " is " + paper_prerequisite + " and any one of " + add_prerequisite
+                    });
+                    
+                }
+
+            }
+
+        });
+        
     
         
 	   //CO-REQ HANDLER
