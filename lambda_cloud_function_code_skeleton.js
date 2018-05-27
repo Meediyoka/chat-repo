@@ -13,45 +13,47 @@ exports.handler = function(event, context, callback) {
     const manukau = event.queryResult.parameters['manukau'];
 
 
-    function fallback(agent) {
+    function fallback(agent) {                          //Fall back agent, If a query cannot be matched fallback agent is called.
         agent.add(`I didn't understand`);
         agent.add(`I'm sorry, can you try again?`);
     }
 
 
-    // PRE-REQ HANDLER
+    // PRE-REQ HANDLER // Handles any intent regarding prerequisites for papers in software development
 
-    if (pre_req != null) {
+    if (pre_req != null) {			// If pre_req was defined in a parameter, continue with the embedded functions, else check next if statement
 
-        var params = {
-            TableName: 'paperInformationChatBot',
-            ProjectionExpression: 'Prerequisites, Paper_Name, PrerequisitesAdditional',
-            FilterExpression: 'Paper_Code = :paper_code',
+        var params = {													//params houses the query parameters based on those fed by DialogFlow
+            TableName: 'paperInformationChatBot',						// Reference to the table name (We have two tables in total as of this comment
+            ProjectionExpression: 'Prerequisites, Paper_Name, PrerequisitesAdditional',		// Projection of the desired results/values sent to our functions
+            FilterExpression: 'Paper_Code = :paper_code',				// Filter expression defines what element to look in I.e COMP500 elements
             ExpressionAttributeValues: {
-                ":paper_code": paper
+                ":paper_code": paper									// The parameter recieved from the user being assigned as the filter expression variable.
             }
-        };
-
-
-        docClient.scan(params, function(err, data) {
-            if (err) {
-                console.log(err, null); // an error occurred // 
-            } else {
-                console.log(data);
-
-                var paper_name = data.Items[0].Paper_Name;
-                var paper_prerequisite = data.Items[0].Prerequisites;
-                var add_prerequisite = data.Items[0].PrerequisitesAdditional;
+        };																////////////////////////////
+																		// For documentations sake//
+																		// all relevant commenting//		
+        docClient.scan(params, function(err, data) {					// will be referenced here//
+            if (err) {													// only. Other functions  //
+                console.log(err, null); // an error occurred // 		// perform with similar   //
+            } else {													// nature and further     //
+                console.log(data);		// Standard dev testing //		// commenting would be    //
+																		// unneccasary            //
+																		////////////////////////////
+																		
+                var paper_name = data.Items[0].Paper_Name;		// values recieved from the scan result are returned in an object (data)
+                var paper_prerequisite = data.Items[0].Prerequisites;	// .Prerequisites points to the prerequisite value within the object recieved.
+                var add_prerequisite = data.Items[0].PrerequisitesAdditional;	//Items[0] essentially refers to the first object returned
 
                 console.log(paper_prerequisite);
-                if (paper_prerequisite == "None" && add_prerequisite == "None") {
+                if (paper_prerequisite == "None" && add_prerequisite == "None") {	//Conditionial logic for whether a paper has prerequisites or not
                     callback(null, {
-                        fulfillmentText: "" + paper_name + " has no prerequisites."
+                        fulfillmentText: "" + paper_name + " has no prerequisites."		// The callback contains the fulfillmentText parameter
                     });
                 } else if (paper_prerequisite != "None" && add_prerequisite == "None") {
                     callback(null, {
-                        fulfillmentText: "The prerequisites for " + paper_name + " is " + paper_prerequisite
-                    });
+                        fulfillmentText: "The prerequisites for " + paper_name + " is " + paper_prerequisite // the fulfillmentText parameter provides the 
+                    });																						 // chat bot with the neccassary output
                 } else if (paper_prerequisite == "None" && add_prerequisite != "None") {
                     callback(null, {
                         fulfillmentText: "The prerequisites for " + paper_name + " are any one of " + add_prerequisite
@@ -442,12 +444,9 @@ exports.handler = function(event, context, callback) {
             }
         })
 
-
-
-
     } else {
         callback(null, {
-            fulfillmentText: "Nothing was called!"
+            fulfillmentText: "Nothing was called!"	//Global error fallback. If a major logical error occurs this will be returned.
         });
     }
 };
