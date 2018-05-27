@@ -112,12 +112,12 @@ exports.handler = function(event, context, callback) {
             }
 
         });
-		
-		     //PRESCRIPTOR
-        
+
+        //PRESCRIPTOR
+
     } else if (prescriptor != null) {
-        
-            params = {
+
+        params = {
             TableName: 'paperInformationChatBot',
             ProjectionExpression: 'Paper_Name, Prescriptor', // remove this string if you want to get not only 'name'
             FilterExpression: 'Paper_Code = :paper_code',
@@ -137,22 +137,22 @@ exports.handler = function(event, context, callback) {
                 var paper_prescriptor = data.Items[0].Prescriptor;
 
 
-                    callback(null, {
-                        fulfillmentText: "Paper prescriptor for " + paper_name + ": " + paper_prescriptor
-                    });
-                
-               
+                callback(null, {
+                    fulfillmentText: "Paper prescriptor for " + paper_name + ": " + paper_prescriptor
+                });
+
+
 
             }
 
         });
- 
- 
-		   // YEAR AVAILABLE
-        
+
+
+        // YEAR AVAILABLE
+
     } else if (year != null) {
-        
-            params = {
+
+        params = {
             TableName: 'paperInformationChatBot',
             ProjectionExpression: 'Paper_Name, paperLevel', // remove this string if you want to get not only 'name'
             FilterExpression: 'Paper_Code = :paper_code',
@@ -171,29 +171,29 @@ exports.handler = function(event, context, callback) {
                 var paper_name = data.Items[0].Paper_Name;
                 var paper_year = data.Items[0].paperLevel;
 
-                    if(paper_year == "5"){
+                if (paper_year == "5") {
                     callback(null, {
-                        fulfillmentText: paper_name + " is available the first year of your studies." 
+                        fulfillmentText: paper_name + " is available the first year of your studies."
                     });
-                }else if(paper_year == "6"){
+                } else if (paper_year == "6") {
                     callback(null, {
-                        fulfillmentText: paper_name + " is available in year 2 of your studies." 
+                        fulfillmentText: paper_name + " is available in year 2 of your studies."
                     });
-                }else if(paper_year == "7"){
+                } else if (paper_year == "7") {
                     callback(null, {
-                        fulfillmentText: paper_name + " is available in year 3 of your studies." 
+                        fulfillmentText: paper_name + " is available in year 3 of your studies."
                     });
                 }
 
             }
 
         });
-      
+
         // CORE PAPER
-        
+
     } else if (core != null) {
-        
-            params = {
+
+        params = {
             TableName: 'paperInformationChatBot',
             ProjectionExpression: 'Paper_Name, Core', // remove this string if you want to get not only 'name'
             FilterExpression: 'Paper_Code = :paper_code',
@@ -212,11 +212,11 @@ exports.handler = function(event, context, callback) {
                 var paper_name = data.Items[0].Paper_Name;
                 var paper_core = data.Items[0].Core;
 
-                    if(paper_core == "Yes"){
+                if (paper_core == "Yes") {
                     callback(null, {
-                        fulfillmentText: paper_core + ", " + paper_name + " is a core paper for Software Development" 
+                        fulfillmentText: paper_core + ", " + paper_name + " is a core paper for Software Development"
                     });
-                }else if(paper_core == "No"){
+                } else if (paper_core == "No") {
                     callback(null, {
                         fulfillmentText: paper_core + ", " + paper_name + " is not a core paper for Software Development"
                     });
@@ -225,12 +225,12 @@ exports.handler = function(event, context, callback) {
             }
 
         });
-        
-                // JOB RELATION
-        
+
+        // JOB RELATION
+
     } else if (job != null) {
-        
-            params = {
+
+        params = {
             TableName: 'paperInformationChatBot',
             ProjectionExpression: 'Paper_Name, Job', // remove this string if you want to get not only 'name'
             FilterExpression: 'Paper_Code = :paper_code',
@@ -249,11 +249,11 @@ exports.handler = function(event, context, callback) {
                 var paper_name = data.Items[0].Paper_Name;
                 var paper_job = data.Items[0].Job;
 
-               callback(null, {
-                        fulfillmentText: "Examples of related jobs for " + paper_name + " include: " + paper_job
-                    });
-                
-               
+                callback(null, {
+                    fulfillmentText: "Examples of related jobs for " + paper_name + " include: " + paper_job
+                });
+
+
 
             }
 
