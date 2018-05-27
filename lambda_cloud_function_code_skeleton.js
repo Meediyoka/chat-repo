@@ -148,7 +148,56 @@ exports.handler = function(event, context, callback) {
            
                   
        // MID SEM BREAK
-           
+           else if(parameter2 == "midsembreak" && parameter1 == "semester1"){
+               table_scope = "Sem1MidBreak";
+               fulfillmentScopeText = midSemBreak;
+               fulfillmentScopeDate = semester1;
+
+           }
+           else if(parameter2 == "midsembreak" && parameter1 == "semester2"){
+               table_scope = "Sem2MidBreak";
+               fulfillmentScopeText = midSemBreak;
+               fulfillmentScopeDate = semester2;
+
+           }
+           else if (parameter2 == "midsembreak"){
+               table_scope = "midSemBreak";
+               fulfillmentScopeText = midSemBreak;
+               fulfillmentScopeDate = "This years";
+           }
+
+
+
+
+           console.log(table_scope);
+
+           params = {
+            TableName: 'generalInformationChatbot',
+            ProjectionExpression: 'dateValue', // remove this string if you want to get not only 'name'
+            FilterExpression: 'informationType = :table_scope',
+            ExpressionAttributeValues: {
+                ":table_scope": table_scope
+            }
+           };
+           docClient.scan(params, function(err, data) {
+            if (err) {
+                console.log(err, null); // an error occurred // 
+            } else {
+                console.log(data);
+
+                var dateValue = data.Items[0].dateValue;
+
+                console.log(dateValue);
+
+
+            callback(null, {
+                        fulfillmentText: fulfillmentScopeDate + fulfillmentScopeText + dateValue
+                    });
+
+
+            }
+
+        })
                   
        // MANUKAU
         
