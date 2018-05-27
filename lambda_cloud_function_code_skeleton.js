@@ -147,6 +147,47 @@ exports.handler = function(event, context, callback) {
 
         });
  
+ 
+		   // YEAR AVAILABLE
+        
+    } else if (year != null) {
+        
+            params = {
+            TableName: 'paperInformationChatBot',
+            ProjectionExpression: 'Paper_Name, paperLevel', // remove this string if you want to get not only 'name'
+            FilterExpression: 'Paper_Code = :paper_code',
+            ExpressionAttributeValues: {
+                ":paper_code": paper
+            }
+        };
+
+
+        docClient.scan(params, function(err, data) {
+            if (err) {
+                console.log(err, null); // an error occurred // 
+            } else {
+                console.log(data);
+
+                var paper_name = data.Items[0].Paper_Name;
+                var paper_year = data.Items[0].paperLevel;
+
+                    if(paper_year == "5"){
+                    callback(null, {
+                        fulfillmentText: paper_name + " is available the first year of your studies." 
+                    });
+                }else if(paper_year == "6"){
+                    callback(null, {
+                        fulfillmentText: paper_name + " is available in year 2 of your studies." 
+                    });
+                }else if(paper_year == "7"){
+                    callback(null, {
+                        fulfillmentText: paper_name + " is available in year 3 of your studies." 
+                    });
+                }
+
+            }
+
+        });
       
         // CORE PAPER
         
